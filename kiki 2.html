@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Si-Resto</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary-bg: #032553;
+            --sidebar-bg: #021a3a;
+            --card-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Latar belakang dengan pola jaring/gelombang (Sama dengan tampilan user) */
+        .bg-pattern {
+            background-image: radial-gradient(circle at top right, rgba(255,255,255,0.05) 0%, transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(255,255,255,0.05) 0%, transparent 40%);
+        }
+
+        /* ================= LOGIN SECTION ================= */
+        #login-section {
+            display: flex; /* Aktif saat pertama buka */
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            color: #333; /* Teks gelap di atas putih */
+        }
+
+        /* ================= ADMIN LAYOUT ================= */
+        #admin-layout {
+            display: none; /* Disembunyikan sampai login sukses */
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            min-height: 100vh;
+            border-right: 1px solid var(--card-border);
+            position: fixed;
+            top: 0; left: 0;
+            padding-top: 30px;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .nav-admin { 
+            padding: 12px 20px; 
+            color: rgba(255,255,255,0.7); 
+            display: block; 
+            text-decoration: none; 
+            margin: 5px 15px; 
+            border-radius: 10px;
+            transition: 0.3s; 
+            font-weight: 500;
+        }
+        .nav-admin:hover, .nav-admin.active { 
+            background: rgba(255, 255, 255, 0.1); 
+            color: white; 
+        }
+
+        .admin-page { display: none; animation: fadeIn 0.4s ease; }
+        .admin-page.active-page { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ================= DASHBOARD CARDS (Tema Baru) ================= */
+        .dashboard-title { font-size: 2.2rem; font-weight: bold; margin-bottom: 30px; }
+        
+        .stat-card {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            color: #333; /* Teks Hitam/Gelap */
+            height: 100%;
+        }
+
+        .icon-box-soft {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        /* Warna Icon Box Pastel */
+        .bg-orange-soft { background-color: #ffe8d6; color: #f08a5d; }
+        .bg-purple-soft { background-color: #eaddff; color: #7e57c2; }
+        .bg-green-soft { background-color: #d1f2eb; color: #2ecc71; }
+
+        .stat-value { font-size: 3.5rem; font-weight: 900; line-height: 1; color: #212529; }
+        .stat-label { font-size: 1rem; color: #6c757d; font-weight: 500; margin-bottom: 10px; line-height: 1.2;}
+
+        /* ================= CHARTS & TABLES ================= */
+        .chart-container {
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .table-custom { color: white; }
+        .table-custom th { color: rgba(255,255,255,0.6); font-weight: normal; border-bottom: 1px solid var(--card-border); }
+        .table-custom td { border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; padding: 15px 10px;}
+        
+        /* ================= FORM GLASS ================= */
+        .glass-form { background: rgba(0,0,0,0.1); border: 1px solid var(--card-border); border-radius: 20px; padding: 35px; backdrop-filter: blur(10px);}
+        .form-control, .form-select { background: rgba(255,255,255,0.05) !important; color: white !important; border: 1px solid rgba(255,255,255,0.3); padding: 12px; border-radius: 10px;}
+        .form-control:focus, .form-select:focus { box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1); border-color: white; }
+        .form-control::placeholder { color: rgba(255,255,255,0.5); }
+        .form-control[type="file"] { background: rgba(255,255,255,0.9) !important; color: black !important; }
+        .form-select option { color: #000; }
+    </style>
+</head>
+<body class="bg-pattern">
+
+    <div id="login-section">
+        <div class="login-box">
+            <h2 class="fw-bold mb-1 text-primary">SI-RESTO</h2>
+            <p class="text-secondary mb-4">Admin Security Login</p>
+            <form id="formLogin">
+                <div class="mb-3 text-start">
+                    <label class="form-label small fw-bold">Username</label>
+                    <input type="text" class="form-control" style="color:#333 !important; background:#f8f9fa !important;" id="username" required placeholder="Masukkan username">
+                </div>
+                <div class="mb-4 text-start">
+                    <label class="form-label small fw-bold">Password</label>
+                    <input type="password" class="form-control" style="color:#333 !important; background:#f8f9fa !important;" id="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary w-100 fw-bold rounded-pill py-2">LOGIN DASHBOARD</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-layout">
+        
+        <div class="sidebar">
+            <div class="text-center mb-5 px-3">
+                <h3 class="fw-bold text-white mb-0">ADMIN</h3>
+                <small class="text-light opacity-75">Dashboard Si-Resto</small>
+            </div>
+            
+            <a href="#" class="nav-admin active" onclick="switchPage('dashboard', this)"><i class="bi bi-grid-1x2 me-2"></i> Dashboard</a>
+            <a href="#" class="nav-admin" onclick="switchPage('update', this)"><i class="bi bi-file-earmark-arrow-up me-2"></i> Update Pengajuan</a>
+            
+            <a href="#" class="nav-admin mt-5 text-danger opacity-75 hover-opacity-100" onclick="doLogout()"><i class="bi bi-box-arrow-left me-2"></i> Logout</a>
+        </div>
+
+        <div class="main-content">
+            
+            <div id="dashboard" class="admin-page active-page">
+                <h2 class="dashboard-title">Dashboard Pelayanan Si-Resto</h2>
+                
+                <div class="row g-4 mb-5">
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="icon-box-soft bg-orange-soft"><i class="bi bi-people-fill"></i></div>
+                                    <div class="stat-label">Pemohon dalam<br>Antrian</div>
+                                </div>
+                                <div class="stat-value">147</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="icon-box-soft bg-purple-soft"><i class="bi bi-tools"></i></div>
+                                    <div class="stat-label">Pemohon Sedang<br>Dikerjakan</div>
+                                </div>
+                                <div class="stat-value">89</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="icon-box-soft bg-green-soft"><i class="bi bi-file-earmark-check-fill"></i></div>
+                                    <div class="stat-label">Total Permohonan<br>Diajukan</div>
+                                </div>
+                                <div class="stat-value">512</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-5">
+                    <div class="col-lg-8">
+                        <div class="chart-container h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="mb-0 text-white">Total Pengajuan Permohonan Tiap Bulan</h5>
+                                <i class="bi bi-list fs-4 text-white opacity-50"></i>
+                            </div>
+                            <canvas id="barChart" height="120"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="chart-container h-100 text-center">
+                            <h5 class="mb-4 text-white">Status Antrian Pemohon<br>Saat Ini</h5>
+                            <div style="max-width: 200px; margin: 0 auto;">
+                                <canvas id="donutChart"></canvas>
+                            </div>
+                            <div class="d-flex justify-content-center gap-3 mt-4 text-white opacity-75 small">
+                                <span><i class="bi bi-square-fill me-1" style="color: #a855f7;"></i> Total</span>
+                                <span><i class="bi bi-square-fill me-1" style="color: #3b82f6;"></i> Antrian</span>
+                                <span><i class="bi bi-square-fill me-1" style="color: #f97316;"></i> Dikerjakan</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h5 class="fw-bold mb-3">Daftar Pengajuan Terbaru</h5>
+                <div class="chart-container p-0 overflow-hidden">
+                    <div class="table-responsive">
+                        <table class="table table-custom mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">Arsip Type Icon</th>
+                                    <th>Nomor Resi</th>
+                                    <th>Pemohon</th>
+                                    <th>Tanggal</th>
+                                    <th>Status Pekerjaan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="ps-4"><i class="bi bi-journal-text text-warning me-2"></i> Buku C Desa</td>
+                                    <td>RST-8392</td>
+                                    <td>Pemerintah Desa Trucuk</td>
+                                    <td>13 Mar 2026</td>
+                                    <td><span class="badge bg-light text-dark px-3 py-2 rounded-pill">Antri</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4"><i class="bi bi-file-earmark-person text-info me-2"></i> Buku B1 Desa</td>
+                                    <td>RST-1102</td>
+                                    <td>Desa Sumberrejo</td>
+                                    <td>10 Mar 2026</td>
+                                    <td><span class="badge bg-primary px-3 py-2 rounded-pill">Verifikasi Fisik</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4"><i class="bi bi-folder text-success me-2"></i> Arsip Pribadi</td>
+                                    <td>RST-0921</td>
+                                    <td>Bpk. Budi Santoso</td>
+                                    <td>01 Mar 2026</td>
+                                    <td><span class="badge bg-success px-3 py-2 rounded-pill">Selesai</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="update" class="admin-page">
+                <h2 class="dashboard-title">Update Pekerjaan & Upload Bukti</h2>
+                
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="glass-form">
+                            <form id="formUpdateAdmin">
+                                <div class="mb-4">
+                                    <label class="form-label text-light fw-bold">Nomor Resi (Kode Tracking) *</label>
+                                    <input type="text" class="form-control form-control-lg fw-bold text-uppercase" required placeholder="Cth: RST-1234">
+                                </div>
+                                
+                                <hr class="border-light opacity-25 mb-4">
+
+                                <div class="mb-4">
+                                    <label class="form-label text-light">Pilih Tahapan yang Sudah Selesai *</label>
+                                    <select class="form-select" required>
+                                        <option value="" disabled selected>-- Pilih Tahapan --</option>
+                                        <option value="Verifikasi arsip fisik">Verifikasi arsip fisik</option>
+                                        <option value="Pengerjaan pemisahan">Pengerjaan pemisahan</option>
+                                        <option value="Perbaikan lembaran">Perbaikan lembaran</option>
+                                        <option value="Penyusunan dan perapihan">Penyusunan dan perapihan</option>
+                                        <option value="Duplikasi arsip">Duplikasi arsip</option>
+                                        <option value="Penjilidan arsip">Penjilidan arsip</option>
+                                        <option value="Alih Media">Alih Media</option>
+                                        <option value="Selesai & Serah Terima">Selesai & Serah Terima</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label text-light">Catatan Pengerjaan (Opsional)</label>
+                                    <textarea class="form-control" rows="3" placeholder="Masukkan detail kondisi arsip, kendala, atau tindakan yang dilakukan..."></textarea>
+                                </div>
+
+                                <div class="mb-5">
+                                    <label class="form-label text-light">Upload Foto Bukti Pekerjaan *</label>
+                                    <input type="file" class="form-control" accept="image/jpeg, image/png" required multiple>
+                                    <small class="text-light opacity-75 mt-2 d-block"><i class="bi bi-info-circle me-1"></i>Foto ini akan langsung terlihat oleh masyarakat di halaman Tracking Detail.</small>
+                                </div>
+
+                                <button type="submit" class="btn btn-light text-primary px-5 py-2 fw-bold rounded-pill"><i class="bi bi-cloud-upload me-2"></i>Simpan & Publikasikan</button>
+                            </form>
+                        </div>
+                        
+                        <div id="alertSuccessAdmin" class="alert alert-success mt-4 d-none" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i> Data dan bukti pekerjaan berhasil di-update ke sistem Tracking masyarakat.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ================= LOGIKA LOGIN =================
+        const loginSection = document.getElementById('login-section');
+        const adminLayout = document.getElementById('admin-layout');
+        const formLogin = document.getElementById('formLogin');
+
+        formLogin.addEventListener('submit', function(e) {
+            e.preventDefault();
+            loginSection.style.display = 'none';
+            adminLayout.style.display = 'block';
+            renderCharts(); // Panggil chart setelah elemen tampil
+        });
+
+        function doLogout() {
+            adminLayout.style.display = 'none';
+            loginSection.style.display = 'flex';
+            formLogin.reset();
+        }
+
+        // ================= LOGIKA NAVIGASI MENU =================
+        function switchPage(pageId, element) {
+            document.querySelectorAll('.admin-page').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            document.querySelectorAll('.nav-admin').forEach(nav => {
+                nav.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active-page');
+            element.classList.add('active');
+        }
+
+        // ================= LOGIKA FORM UPDATE =================
+        document.getElementById('formUpdateAdmin').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const alertBox = document.getElementById('alertSuccessAdmin');
+            alertBox.classList.remove('d-none');
+            setTimeout(() => { alertBox.classList.add('d-none'); }, 4000);
+            this.reset();
+        });
+
+        // ================= SETUP CHART.JS =================
+        let chartsRendered = false;
+
+        function renderCharts() {
+            if (chartsRendered) return; // Mencegah chart dirender ulang berkali-kali
+            
+            Chart.defaults.color = 'rgba(255, 255, 255, 0.7)'; // Default warna teks chart
+
+            // 1. BAR CHART
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            let gradientBar = ctxBar.createLinearGradient(0, 0, 0, 400);
+            gradientBar.addColorStop(0, '#56ccf2'); // Cyan muda atas
+            gradientBar.addColorStop(1, '#6f42c1'); // Ungu bawah
+
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Des'],
+                    datasets: [{
+                        label: 'Total Pengajuan',
+                        data: [147, 33, 33, 47, 60, 88, 78, 84, 99, 102, 200, 512],
+                        backgroundColor: gradientBar,
+                        borderRadius: 5,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 250,
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // 2. DONUT CHART
+            const ctxDonut = document.getElementById('donutChart').getContext('2d');
+            new Chart(ctxDonut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Total', 'Antrian', 'Dikerjakan'],
+                    datasets: [{
+                        data: [512, 147, 89],
+                        backgroundColor: [
+                            '#a855f7', // Ungu
+                            '#3b82f6', // Biru
+                            '#f97316'  // Orange
+                        ],
+                        borderWidth: 0, // Hilangkan garis pembatas putih bawaan chart.js
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '70%', // Membuat lubang donat lebih besar
+                    plugins: {
+                        legend: { display: false } // Custom legend dibuat dengan HTML di bawah chart
+                    }
+                }
+            });
+
+            chartsRendered = true;
+        }
+    </script>
+</body>
+</html>

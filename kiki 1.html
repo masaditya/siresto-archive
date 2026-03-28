@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Si-Resto - Sistem Informasi Restorasi Arsip</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-bg: #032553;
+            --nav-bg: #021a3a;
+            --card-border: rgba(255, 255, 255, 0.2);
+        }
+        
+        body {
+            background-color: var(--primary-bg);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bg-pattern {
+            background-image: radial-gradient(circle at top right, rgba(255,255,255,0.05) 0%, transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(255,255,255,0.05) 0%, transparent 40%);
+            flex-grow: 1;
+        }
+
+        .navbar-custom { background-color: var(--nav-bg); border-radius: 0 0 15px 15px; }
+        .nav-link { color: white !important; font-weight: 500; transition: 0.3s; }
+        .nav-link:hover { color: #d1e7dd !important; }
+        .nav-link.active { font-weight: 800; border-bottom: 2px solid white; }
+
+        .btn-outline-light-custom {
+            border: 1px solid white; color: white; border-radius: 30px;
+            padding: 8px 30px; text-decoration: none; display: inline-block; transition: all 0.3s ease;
+        }
+        .btn-outline-light-custom:hover { background-color: white; color: var(--primary-bg); }
+
+        .title-huge { font-size: 4rem; font-weight: 600; line-height: 1.1; }
+
+        /* Komponen Box & Card Kaca */
+        .form-box, .tracking-box, .faq-card {
+            border: 1px solid var(--card-border); border-radius: 15px;
+            background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px);
+        }
+        
+        .form-box { padding: 40px; }
+        .tracking-box { padding: 40px; display: none; animation: fadeIn 0.5s; }
+        .faq-card { padding: 20px; height: 100%; }
+        .faq-card-highlight { background-color: white; color: var(--primary-bg); border-radius: 15px; padding: 30px; height: 100%; }
+
+        /* ================= DASHBOARD SIMPEL USER ================= */
+        .stat-card-user {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            color: #333; /* Teks Hitam/Gelap */
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+        .stat-card-user:hover { transform: translateY(-5px); }
+        .icon-box-soft {
+            width: 50px; height: 50px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; margin-bottom: 15px;
+        }
+        .bg-orange-soft { background-color: #ffe8d6; color: #f08a5d; }
+        .bg-purple-soft { background-color: #eaddff; color: #7e57c2; }
+        .bg-green-soft { background-color: #d1f2eb; color: #2ecc71; }
+        .stat-value { font-size: 3.5rem; font-weight: 900; line-height: 1; color: #212529; }
+        .stat-label { font-size: 1rem; color: #6c757d; font-weight: 500; margin-bottom: 10px; line-height: 1.2;}
+        
+        /* Animasi Transisi Halaman SPA */
+        .page-section { display: none; animation: fadeInPage 0.4s ease-in-out; }
+        .page-section.active-page { display: block; }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Timeline */
+        .timeline-list { list-style: none; padding-left: 10px; }
+        .timeline-list li {
+            position: relative; padding-left: 25px; margin-bottom: 25px;
+            border-left: 2px dotted rgba(255,255,255,0.5); font-size: 1.2rem; font-weight: 600;
+            color: rgba(255,255,255,0.4); transition: color 0.3s ease;
+        }
+        .timeline-list li.done { color: white; border-left: 2px dotted white; }
+        .timeline-list li::before {
+            content: ''; position: absolute; left: -7px; top: 6px; width: 12px; height: 12px;
+            border-radius: 50%; background-color: rgba(255,255,255,0.4);
+        }
+        .timeline-list li.done::before { background-color: white; box-shadow: 0 0 10px white; }
+        
+        .search-input { background-color: rgba(0,0,0,0.2) !important; color: white !important; }
+        .search-input::placeholder { color: rgba(255,255,255,0.6); }
+        .form-control[type=file] { background-color: rgba(255,255,255,0.9) !important; color: #000 !important; }
+        .form-select option { color: #000; }
+
+        /* Khusus Print */
+        @media print {
+            body * { visibility: hidden; }
+            body, html { background: white !important; color: black !important; }
+            #modalNotifPengajuan { position: absolute; left: 0; top: 0; margin: 0; padding: 0; width: 100%; }
+            .modal-dialog { margin: 0; padding: 0; max-width: 100%; }
+            #areaPrintResi, #areaPrintResi * { visibility: visible; }
+            #areaPrintResi {
+                position: absolute; left: 0; top: 0; width: 100%;
+                border: 2px dashed black !important; padding: 30px !important;
+                background-color: white !important; color: black !important;
+                border-radius: 0 !important; text-align: center;
+            }
+            #areaPrintResi .text-primary, #areaPrintResi .text-danger { color: black !important; }
+            #areaPrintResi .text-light, #areaPrintResi .text-secondary { color: #333 !important; }
+        }
+    </style>
+</head>
+<body class="bg-pattern">
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom container mt-2 py-3 sticky-top shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand d-lg-none fw-bold" href="#home">Si-Resto</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav gap-4">
+                    <li class="nav-item"><a class="nav-link spa-link active" href="#home" data-target="home">HOME</a></li>
+                    <li class="nav-item"><a class="nav-link spa-link" href="#pengajuan" data-target="pengajuan">PENGAJUAN</a></li>
+                    <li class="nav-item"><a class="nav-link spa-link" href="#upload" data-target="upload">UPLOAD DOKUMEN</a></li>
+                    <li class="nav-item"><a class="nav-link spa-link" href="#tracking" data-target="tracking">TRACKING</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="app-content">
+
+        <div id="home" class="page-section active-page">
+            
+            <section class="container py-5 mt-4 d-flex align-items-center">
+                <div class="row align-items-center w-100">
+                    <div class="col-lg-6 mb-5 mb-lg-0">
+                        <h4 class="fw-light mb-1">Si-Resto</h4>
+                        <p class="fs-5 mb-4">Sistem Informasi</p>
+                        <h1 class="title-huge mb-4">Restorasi<br>Arsip</h1>
+                        <p class="mb-5 text-light" style="max-width: 400px;">Layanan restorasi untuk menjaga arsip bernilai sersejarah dan pengetahuan</p>
+                        <a href="#pengajuan" class="btn-outline-light-custom spa-link" data-target="pengajuan">AJUKAN SEKARANG</a>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <img src="https://via.placeholder.com/500x400/021a3a/ffffff?text=3D+Document+Illustration" alt="Ilustrasi Restorasi" class="img-fluid rounded-4 shadow-lg">
+                    </div>
+                </div>
+            </section>
+
+            <section class="container mb-5 pb-4 border-bottom border-light border-opacity-25">
+                <div class="row justify-content-center mb-4 text-center">
+                    <div class="col-12">
+                        <h5 class="fw-light text-white opacity-75">Statistik Pelayanan Si-Resto Saat Ini</h5>
+                    </div>
+                </div>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-4">
+                        <div class="stat-card-user">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="icon-box-soft bg-orange-soft"><i class="bi bi-people-fill"></i></div>
+                                    <div class="stat-label">Pemohon dalam<br>Antrian</div>
+                                </div>
+                                <div class="stat-value">147</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card-user">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="icon-box-soft bg-purple-soft"><i class="bi bi-tools"></i></div>
+                                    <div class="stat-label">Pemohon Sedang<br>Dikerjakan</div>
+                                </div>
+                                <div class="stat-value">89</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card-user">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="icon-box-soft bg-green-soft"><i class="bi bi-file-earmark-check-fill"></i></div>
+                                    <div class="stat-label">Total Permohonan<br>Diajukan</div>
+                                </div>
+                                <div class="stat-value">512</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="container py-5">
+                <div class="text-center mb-5">
+                    <h2 class="display-5 mb-4">Restorasi Arsip</h2>
+                    <h3 class="fw-bold mb-4">"Arsip Terawat, Informasi Selamat"</h3>
+                    <p class="mx-auto" style="max-width: 600px;">Jangan biarkan arsip penting rusak dan hilang. Ajukan restorasi sekarang untuk menjaga informasi tetap aman.</p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <img src="https://via.placeholder.com/600x400/021a3a/ffffff?text=Foto+Petugas+1" alt="Petugas 1" class="img-fluid rounded-3 w-100 object-fit-cover" style="height: 350px;">
+                    </div>
+                    <div class="col-md-6">
+                        <img src="https://via.placeholder.com/600x400/021a3a/ffffff?text=Foto+Petugas+2" alt="Petugas 2" class="img-fluid rounded-3 w-100 object-fit-cover" style="height: 350px;">
+                    </div>
+                </div>
+            </section>
+
+            <section class="container py-5 mb-5">
+                <div class="text-center mb-5 mt-4">
+                    <h2 class="fw-bold">SI-RESTO</h2>
+                    <h3 class="fw-light mb-0">(Sistem Informasi Restorasi Online)</h3>
+                    <div class="d-flex justify-content-center mt-3">
+                        <h2 class="text-danger fw-bold me-2">?</h2>
+                        <h2 class="fw-light">FAQ</h2>
+                    </div>
+                </div>
+
+                <div class="row g-4 justify-content-center align-items-stretch">
+                    <div class="col-lg-4 d-flex flex-column gap-4">
+                        <div class="faq-card">
+                            <i class="bi bi-arrow-up-right fs-4 mb-2 d-block text-white opacity-50"></i>
+                            <h5 class="fw-bold">Berapa lama prosedurnya?</h5>
+                            <p class="mb-0 text-light">Tergantung tingkat Kerusakan dan banyaknya lembar, umumnya 2 - 3 Bulan</p>
+                        </div>
+                        <div class="faq-card">
+                            <i class="bi bi-arrow-up-right fs-4 mb-2 d-block text-white opacity-50"></i>
+                            <h5 class="fw-bold">Apa saja yang bisa direstorasi?</h5>
+                            <p class="mb-0 text-light">Layanan restorasi saat ini diprioritaskan untuk arsip Buku Letter C Desa dan B1 Desa. Namun, masyarakat juga tetap dapat mengajukan restorasi untuk arsip pribadi.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="faq-card-highlight shadow">
+                            <i class="bi bi-arrow-up-right text-danger fs-3 mb-3 d-block"></i>
+                            <h5 class="fw-bold mb-3 text-dark">Apasih itu restorasi?</h5>
+                            <p class="mb-4 text-secondary" style="text-align: justify; line-height: 1.6;">Restorasi arsip adalah proses perbaikan dan pemulihan arsip yang mengalami kerusakan fisik maupun kimia, agar informasi di dalamnya tetap terjaga dan dapat dimanfaatkan kembali.</p>
+                            <p class="mb-0 fw-bold text-dark">Karena arsip bukan sekadar kertas biasa — <br><span class="fw-normal text-secondary">di dalamnya ada nilai sejarah, bukti hukum, dan data penting.</span></p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 d-flex flex-column gap-4">
+                        <div class="faq-card">
+                            <i class="bi bi-arrow-up-right fs-4 mb-2 d-block text-white opacity-50"></i>
+                            <h5 class="fw-bold">Syarat pengajuan restorasi apa?</h5>
+                            <ol class="mb-0 text-light ps-3">
+                                <li class="mb-2">Surat permohonan restorasi dari desa diketahui kecamatan</li>
+                                <li class="mb-2">Berita Acara penyerahan arsip di restorasi</li>
+                                <li>Foto kondisi arsip</li>
+                            </ol>
+                        </div>
+                        <div class="faq-card">
+                            <i class="bi bi-arrow-up-right fs-4 mb-2 d-block text-white opacity-50"></i>
+                            <h5 class="fw-bold">Konsultasi</h5>
+                            <p class="mb-0 text-light">085-235-635-480 (Kiki)<br>Dinas Perpustakaan dan Kearsipan</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="pengajuan" class="page-section">
+            <section class="container py-5 mt-4">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold">Pengajuan Restorasi Arsip</h2>
+                            <p class="text-light">Isi detail Anda dan arsip untuk mendapatkan nomor antrean.</p>
+                        </div>
+                        <div class="form-box shadow-lg">
+                            <form id="formPengajuan">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label text-light">Nama Lengkap / Instansi</label>
+                                        <input type="text" class="form-control bg-transparent text-white border-light" required placeholder="Cth: Pemerintah Desa Mekarjaya">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label text-light">No. WhatsApp (Aktif)</label>
+                                        <input type="tel" class="form-control bg-transparent text-white border-light" required placeholder="Cth: 081234567890">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-light">Alamat Lengkap</label>
+                                    <textarea class="form-control bg-transparent text-white border-light" rows="2" required placeholder="Masukkan alamat lengkap desa atau pengirim..."></textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label text-light">Jenis Arsip</label>
+                                        <select class="form-select bg-transparent text-white border-light" required>
+                                            <option value="" disabled selected>-- Pilih Jenis Arsip --</option>
+                                            <option value="Buku C">Buku C (Letter C Desa)</option>
+                                            <option value="Buku B1">Buku B1</option>
+                                            <option value="Arsip Pribadi">Arsip Pribadi</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label text-light">Estimasi Jumlah Lembar/Buku</label>
+                                        <input type="number" class="form-control bg-transparent text-white border-light" required placeholder="0">
+                                    </div>
+                                </div>
+                                <div class="d-grid mt-2">
+                                    <button type="submit" class="btn btn-light text-primary fw-bold py-2 rounded-pill">Ambil Nomor Antrean & Resi</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="upload" class="page-section">
+            <section class="container py-5 mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-7">
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold">Upload Dokumen Persyaratan</h2>
+                            <p class="text-light">Masukkan nomor resi pengajuan Anda dan unggah dokumen pendukung.</p>
+                        </div>
+                        <div class="form-box shadow-lg">
+                            <form id="formUpload">
+                                <div class="mb-4">
+                                    <label class="form-label text-light fw-bold">Nomor Resi Pengajuan</label>
+                                    <input type="text" class="form-control form-control-lg bg-transparent text-white border-light fw-bold" required placeholder="RST-XXXX" id="uploadInputResi">
+                                </div>
+                                <hr class="border-light opacity-50 mb-4">
+                                <div class="mb-3">
+                                    <label class="form-label text-light">1. Surat Permohonan Restorasi (PDF)</label>
+                                    <input type="file" class="form-control" required accept=".pdf">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-light">2. Berita Acara Penyerahan Arsip (PDF)</label>
+                                    <input type="file" class="form-control" required accept=".pdf">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label text-light">3. Foto Kondisi Arsip Saat Ini (JPG/PNG)</label>
+                                    <input type="file" class="form-control" required accept="image/jpeg, image/png" multiple>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-success fw-bold py-2 rounded-pill"><i class="bi bi-cloud-arrow-up me-2"></i>Upload Dokumen</button>
+                                </div>
+                            </form>
+                            <div id="notifUploadSukses" class="alert alert-success mt-4 d-none text-center" role="alert">
+                                <i class="bi bi-check-circle-fill fs-4 d-block mb-2"></i>
+                                <strong>Berhasil!</strong> Dokumen untuk resi <span id="tampilResiUpload" class="fw-bold"></span> telah tersimpan di sistem antrean.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="tracking" class="page-section">
+            <section class="container py-5 mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 mb-5">
+                        <form id="formSearch" class="d-flex shadow-lg rounded-pill">
+                            <span class="input-group-text bg-transparent border-light rounded-start-pill ps-4 text-white">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text" class="form-control search-input border-light border-start-0 border-end-0 py-3" placeholder="MASUKAN KODE RESI" required id="inputResi">
+                            <button type="submit" class="btn btn-outline-light rounded-end-pill px-4 fw-bold border-start-0">CARI</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="tracking-box" id="hasilTracking">
+                            <div class="text-center mb-4">
+                                <h4 class="text-light">Status Arsip: <span class="fw-bold text-white" id="tampilResi"></span></h4>
+                            </div>
+                            
+                            <div class="row px-lg-5">
+                                <div class="col-md-6">
+                                    <ul class="timeline-list">
+                                        <li class="done">Pengajuan & Upload Dokumen</li>
+                                        <li class="done">Verifikasi arsip fisik</li>
+                                        <li class="done">Pengerjaan pemisahan</li>
+                                        <li>Perbaikan lembaran</li>
+                                        <li>Penyusunan dan perapihan</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="timeline-list">
+                                        <li>Duplikasi arsip</li>
+                                        <li>Penjilidan arsip</li>
+                                        <li>Alih Media</li>
+                                        <li>Selesai & Serah Terima</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4 pt-3 border-top border-secondary border-opacity-25">
+                                <button type="button" class="btn btn-light text-primary rounded-pill px-4 fw-bold shadow" data-bs-toggle="modal" data-bs-target="#modalDetailTracking">
+                                    <i class="bi bi-card-image me-2"></i>Lihat Detail Bukti Pekerjaan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="modalNotifPengajuan" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-white" style="background-color: var(--nav-bg); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px;">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title" id="modalLabel">Pengajuan Berhasil!</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pb-0 text-center">
+                    <div id="areaPrintResi" class="p-3 mb-3" style="background-color: white; color: var(--primary-bg); border-radius: 10px;">
+                        <h5 class="fw-bold mb-1">BUKTI PENGAJUAN RESTORASI</h5>
+                        <p class="small text-secondary mb-3">Si-Resto Dinas Perpustakaan dan Kearsipan</p>
+                        <p class="mb-1">Nomor Antrean Anda:</p>
+                        <h1 class="display-3 fw-bold text-primary my-1" id="modalAngkaAntrian">A-000</h1>
+                        <hr class="border-secondary opacity-25">
+                        <p class="mb-1 text-secondary">Nomor Resi / Kode Tracking:</p>
+                        <h3 class="fw-bold text-danger" id="modalKodeTracking">RST-0000</h3>
+                        <p class="small mt-3 mb-0 text-secondary"><i>*Harap simpan atau cetak bukti ini. Resi digunakan untuk Upload Dokumen & Tracking.</i></p>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 d-flex justify-content-center gap-2">
+                    <button type="button" class="btn btn-outline-light rounded-pill px-4" onclick="window.print()"><i class="bi bi-printer me-2"></i>Cetak Resi</button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4" onclick="lanjutKeUpload()"><i class="bi bi-upload me-2"></i>Lanjut Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalDetailTracking" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content" style="background-color: #f8f9fa; color: #333;">
+                <div class="modal-header bg-white border-bottom">
+                    <h5 class="modal-title fw-bold">Detail Bukti Pekerjaan: <span id="modalDetailResi" class="text-primary"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card mb-3 border-0 shadow-sm rounded-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="fw-bold text-success mb-0"><i class="bi bi-check-circle-fill me-2"></i>1. Verifikasi Arsip Fisik</h6>
+                                <span class="badge bg-light text-secondary border">Selesai</span>
+                            </div>
+                            <p class="small text-muted mb-3"><i class="bi bi-clock me-1"></i> Diperbarui: 13 Maret 2026 - 09:30 WIB</p>
+                            <div class="row g-3">
+                                <div class="col-sm-4">
+                                    <img src="https://via.placeholder.com/400x300/e9ecef/495057?text=Foto+Arsip+Datang" class="img-fluid rounded-3 w-100 object-fit-cover" alt="Bukti 1">
+                                </div>
+                                <div class="col-sm-8">
+                                    <p class="small mb-1 fw-bold">Catatan Admin / Restorator:</p>
+                                    <p class="small mb-0 text-secondary">Arsip telah diterima di ruang restorasi. Kondisi kertas sangat rapuh, lembab, dan ada beberapa bagian yang dimakan rayap. Sesuai dengan Berita Acara penyerahan.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3 border-0 shadow-sm rounded-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="fw-bold text-success mb-0"><i class="bi bi-check-circle-fill me-2"></i>2. Pengerjaan Pemisahan</h6>
+                                <span class="badge bg-light text-secondary border">Selesai</span>
+                            </div>
+                            <p class="small text-muted mb-3"><i class="bi bi-clock me-1"></i> Diperbarui: 15 Maret 2026 - 14:15 WIB</p>
+                            <div class="row g-3">
+                                <div class="col-sm-4">
+                                    <img src="https://via.placeholder.com/400x300/e9ecef/495057?text=Proses+Pemisahan" class="img-fluid rounded-3 w-100 object-fit-cover" alt="Bukti 2">
+                                </div>
+                                <div class="col-sm-8">
+                                    <p class="small mb-1 fw-bold">Catatan Admin / Restorator:</p>
+                                    <p class="small mb-0 text-secondary">Proses pemisahan halaman yang lengket menggunakan uap air (humidifikasi) sedang dilakukan dengan sangat hati-hati agar tinta tidak luntur.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning border-0 shadow-sm rounded-4 d-flex align-items-center mt-4">
+                        <i class="bi bi-hourglass-split fs-4 me-3 text-warning"></i>
+                        <div>
+                            <p class="mb-0 fw-bold text-dark">Tahap Selanjutnya Belum Memiliki Bukti</p>
+                            <p class="small mb-0 text-dark opacity-75">Tahap "Perbaikan Lembaran" dan seterusnya sedang dalam antrean pengerjaan. Mohon cek kembali secara berkala.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-white border-top">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const modalPengajuan = new bootstrap.Modal(document.getElementById('modalNotifPengajuan'));
+
+        function navigateTo(targetId) {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active-page');
+            });
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.classList.add('active-page');
+                window.scrollTo(0, 0); 
+            }
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll(`.spa-link[data-target="${targetId}"]`).forEach(link => {
+                link.classList.add('active');
+            });
+        }
+
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.substring(1) || 'home';
+            navigateTo(hash);
+        });
+
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.substring(1) || 'home';
+            navigateTo(hash);
+        });
+
+        document.querySelectorAll('.spa-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const navbarCollapse = document.getElementById('navbarNav');
+                if(navbarCollapse.classList.contains('show')){
+                    new bootstrap.Collapse(navbarCollapse).toggle();
+                }
+            });
+        });
+
+        document.getElementById('formPengajuan').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const antrian = 'A-' + Math.floor(Math.random() * 900 + 100);
+            const tracking = 'RST-' + Math.floor(Math.random() * 9000 + 1000);
+            
+            document.getElementById('modalAngkaAntrian').innerText = antrian;
+            document.getElementById('modalKodeTracking').innerText = tracking;
+            
+            document.getElementById('inputResi').value = tracking;
+            document.getElementById('uploadInputResi').value = tracking;
+
+            modalPengajuan.show();
+            this.reset();
+        });
+
+        function lanjutKeUpload() {
+            modalPengajuan.hide();
+            window.location.hash = 'upload';
+        }
+
+        document.getElementById('formUpload').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const resi = document.getElementById('uploadInputResi').value;
+            
+            document.getElementById('tampilResiUpload').innerText = resi;
+            const notifBox = document.getElementById('notifUploadSukses');
+            notifBox.classList.remove('d-none');
+            
+            setTimeout(() => {
+                notifBox.classList.add('d-none');
+            }, 5000);
+
+            this.reset();
+            document.getElementById('uploadInputResi').value = resi; 
+        });
+
+        document.getElementById('formSearch').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const resi = document.getElementById('inputResi').value.toUpperCase();
+            
+            document.getElementById('tampilResi').innerText = resi;
+            document.getElementById('modalDetailResi').innerText = resi;
+            document.getElementById('hasilTracking').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
