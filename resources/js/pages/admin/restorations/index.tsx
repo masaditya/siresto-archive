@@ -254,9 +254,9 @@ export default function RestorationIndex({ requests }: { requests: any[] }) {
                             <form id="progress-form" onSubmit={handleSubmit} className="space-y-8">
                                 <div className="space-y-3">
                                     <Label className="text-white/40 font-black uppercase text-[10px] tracking-[0.2em] pl-1">Tahapan yang Selesai *</Label>
-                                    <Select 
-                                        required 
-                                        value={data.stage} 
+                                    <Select
+                                        required
+                                        value={data.stage}
                                         onValueChange={(v) => {
                                             setData('stage', v);
                                             // Reset files if we change stage from 'Selesai' away
@@ -281,7 +281,6 @@ export default function RestorationIndex({ requests }: { requests: any[] }) {
                                     </Select>
                                     {errors.stage && <p className="text-red-400 text-[10px] font-bold uppercase tracking-widest">{errors.stage}</p>}
                                 </div>
-``
                                 {data.stage === 'Selesai & Serah Terima' && (
                                     <div className="bg-green-500/5 border border-green-500/10 rounded-3xl p-8 space-y-8 animate-in zoom-in-95 duration-500">
                                         <div className="flex items-center gap-3">
@@ -296,10 +295,10 @@ export default function RestorationIndex({ requests }: { requests: any[] }) {
                                                 <Label className="text-white/40 font-black uppercase text-[10px] tracking-[0.2em] pl-1 flex items-center gap-2">
                                                     <FileArchive className="w-3.5 h-3.5" /> 1. Arsip Hasil Restorasi (Besar)
                                                 </Label>
-                                                <Input 
-                                                    type="file" 
+                                                <Input
+                                                    type="file"
                                                     required
-                                                    className="rounded-xl border-white/10 h-14 pt-3.5 px-4 bg-white/5 text-white font-bold file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-green-500 file:text-[#021a3a] cursor-pointer" 
+                                                    className="rounded-xl border-white/10 h-14 pt-3.5 px-4 bg-white/5 text-white font-bold file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-green-500 file:text-[#021a3a] cursor-pointer"
                                                     onChange={e => setData('result_file', e.target.files ? e.target.files[0] : null)}
                                                 />
                                                 <p className="text-[9px] text-white/30 italic">Unggah seluruh hasil restorasi dalam satu file (Zip/Rar/PDF).</p>
@@ -309,11 +308,11 @@ export default function RestorationIndex({ requests }: { requests: any[] }) {
                                                 <Label className="text-white/40 font-black uppercase text-[10px] tracking-[0.2em] pl-1 flex items-center gap-2">
                                                     <FileCheck className="w-3.5 h-3.5" /> 2. Berita Acara Final (PDF)
                                                 </Label>
-                                                <Input 
-                                                    type="file" 
+                                                <Input
+                                                    type="file"
                                                     accept=".pdf"
                                                     required
-                                                    className="rounded-xl border-white/10 h-14 pt-3.5 px-4 bg-white/5 text-white font-bold file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-green-500 file:text-[#021a3a] cursor-pointer" 
+                                                    className="rounded-xl border-white/10 h-14 pt-3.5 px-4 bg-white/5 text-white font-bold file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-green-500 file:text-[#021a3a] cursor-pointer"
                                                     onChange={e => setData('ba_final_file', e.target.files ? e.target.files[0] : null)}
                                                 />
                                                 <p className="text-[9px] text-white/30 italic">Pindai Berita Acara yang sudah ditandatangani.</p>
@@ -340,12 +339,12 @@ export default function RestorationIndex({ requests }: { requests: any[] }) {
                                     <div className="space-y-3">
                                         <Label className="text-white/40 font-black uppercase text-[10px] tracking-[0.2em] pl-1">Foto Bukti Update *</Label>
                                         <div className="relative group">
-                                            <Input 
-                                                type="file" 
-                                                multiple 
-                                                accept="image/*" 
+                                            <Input
+                                                type="file"
+                                                multiple
+                                                accept="image/*"
                                                 required
-                                                className="rounded-xl border-white/10 h-14 pt-3.5 px-4 bg-white/5 text-white font-bold file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-white file:text-[#032553] hover:file:bg-white/80 transition-all cursor-pointer" 
+                                                className="rounded-xl border-white/10 h-14 pt-3.5 px-4 bg-white/5 text-white font-bold file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-white file:text-[#032553] hover:file:bg-white/80 transition-all cursor-pointer"
                                                 onChange={e => setData('photos', Array.from(e.target.files || []))}
                                             />
                                         </div>
