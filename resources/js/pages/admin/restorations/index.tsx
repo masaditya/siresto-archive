@@ -281,7 +281,7 @@ export default function RestorationIndex({ requests }: { requests: any[] }) {
                                     </Select>
                                     {errors.stage && <p className="text-red-400 text-[10px] font-bold uppercase tracking-widest">{errors.stage}</p>}
                                 </div>
-
+``
                                 {data.stage === 'Selesai & Serah Terima' && (
                                     <div className="bg-green-500/5 border border-green-500/10 rounded-3xl p-8 space-y-8 animate-in zoom-in-95 duration-500">
                                         <div className="flex items-center gap-3">

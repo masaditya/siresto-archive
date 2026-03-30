@@ -1,10 +1,10 @@
 import PublicLayout from '@/layouts/public-layout';
 import { Head, Link } from '@inertiajs/react';
-import { 
-    Users, 
-    Wrench, 
-    FileCheck, 
-    HelpCircle, 
+import {
+    Users,
+    Wrench,
+    FileCheck,
+    HelpCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { StatCard } from '@/components/restoration/stat-card';
@@ -29,9 +29,9 @@ export default function Welcome({ stats }: { stats: any }) {
                         <p className="text-lg text-white/50 max-w-md leading-relaxed">
                             Layanan restorasi profesional untuk menjaga arsip bernilai sejarah, hukum, dan ilmu pengetahuan tetap abadi.
                         </p>
-                        <Button 
+                        <Button
                             asChild
-                            size="lg" 
+                            size="lg"
                             className="rounded-full px-10 py-7 text-lg font-bold bg-white text-[#032553] hover:bg-red-500 hover:text-white transition-all shadow-xl"
                         >
                             <Link href="/pengajuan">AJUKAN SEKARANG</Link>
@@ -39,9 +39,9 @@ export default function Welcome({ stats }: { stats: any }) {
                     </div>
                     <div className="flex-1 w-full lg:w-auto">
                         <div className="bg-[#021a3a] border border-white/5 p-4 rounded-[40px] shadow-2xl">
-                            <img 
-                                src="https://images.unsplash.com/photo-1544640808-32ca72ac7f67?auto=format&fit=crop&q=80&w=800" 
-                                alt="Restorasi Arsip" 
+                            <img
+                                src="https://bast.anri.go.id/frontend-cms/media/content/1667881948.png"
+                                alt="Restorasi Arsip"
                                 className="rounded-[32px] w-full aspect-video object-cover"
                             />
                         </div>
@@ -52,22 +52,22 @@ export default function Welcome({ stats }: { stats: any }) {
                 <section className="container mx-auto px-4 space-y-12 text-center">
                     <h5 className="text-sm font-bold text-white/30 tracking-[0.2em] uppercase">Statistik Pelayanan</h5>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <StatCard 
-                            icon={Users} 
-                            label="Pemohon Antrian" 
-                            value={stats?.waiting || 0} 
+                        <StatCard
+                            icon={Users}
+                            label="Pemohon Antrian"
+                            value={stats?.waiting || 0}
                             colorClass="bg-[#ffe8d6] text-[#f08a5d]"
                         />
-                        <StatCard 
-                            icon={Wrench} 
-                            label="Sedang Dikerjakan" 
-                            value={stats?.in_progress || 0} 
+                        <StatCard
+                            icon={Wrench}
+                            label="Sedang Dikerjakan"
+                            value={stats?.in_progress || 0}
                             colorClass="bg-[#eaddff] text-[#7e57c2]"
                         />
-                        <StatCard 
-                            icon={FileCheck} 
-                            label="Total Permohonan" 
-                            value={stats?.total || 0} 
+                        <StatCard
+                            icon={FileCheck}
+                            label="Total Permohonan"
+                            value={stats?.total || 0}
                             colorClass="bg-[#d1f2eb] text-[#2ecc71]"
                         />
                     </div>
@@ -81,8 +81,8 @@ export default function Welcome({ stats }: { stats: any }) {
                             Jangan biarkan arsip penting Anda hancur dimakan waktu. Kami hadir dengan teknologi dan metode terbaik untuk mengembalikan kejayaan arsip Anda.
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <img src="https://images.unsplash.com/photo-1582564286939-39994b50643c?auto=format&fit=crop&q=80&w=800" className="rounded-2xl aspect-video object-cover border border-white/5" alt="Proses 1" />
-                            <img src="https://images.unsplash.com/photo-1589578228447-e1a4e481c6c8?auto=format&fit=crop&q=80&w=800" className="rounded-2xl aspect-video object-cover border border-white/5" alt="Proses 2" />
+                            <img src="https://cdn-jpr.jawapos.com/images/43/2026/01/19/arsip-online-2746692795.jpg" className="rounded-2xl aspect-video object-cover border border-white/5" alt="Proses 1" />
+                            <img src="https://web.komdigi.go.id/resource/ZHJ1cGFsL2tvbWluZm8tYW50YXJhZm90by1wZW5nZWxvbGFhbi1hcnNpcC1uYXNpb25hbC0xMDEyMTkuanBn" className="rounded-2xl aspect-video object-cover border border-white/5" alt="Proses 2" />
                         </div>
                     </div>
                 </section>
