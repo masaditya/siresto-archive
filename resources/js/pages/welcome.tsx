@@ -51,7 +51,7 @@ export default function Welcome({ stats }: { stats: any }) {
                 {/* STATS */}
                 <section className="container mx-auto px-4 space-y-12 text-center">
                     <h5 className="text-sm font-bold text-white/30 tracking-[0.2em] uppercase">Statistik Pelayanan</h5>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         <StatCard
                             icon={Users}
                             label="Pemohon Antrian"
@@ -66,9 +66,15 @@ export default function Welcome({ stats }: { stats: any }) {
                         />
                         <StatCard
                             icon={FileCheck}
+                            label="Restorasi Terselesaikan"
+                            value={stats?.completed || 0}
+                            colorClass="bg-[#d1f2eb] text-[#2ecc71]"
+                        />
+                        <StatCard
+                            icon={HelpCircle}
                             label="Total Permohonan"
                             value={stats?.total || 0}
-                            colorClass="bg-[#d1f2eb] text-[#2ecc71]"
+                            colorClass="bg-white/10 text-white/50"
                         />
                     </div>
                 </section>
@@ -145,10 +151,10 @@ export default function Welcome({ stats }: { stats: any }) {
                                 { step: '03', title: 'Nomor Resi', desc: 'Dapatkan nomor resi unik untuk pelacakan.' },
                                 { step: '04', title: 'Upload Dokumen', desc: 'Unggah file pendukung menggunakan resi.' },
                                 { step: '05', title: 'Verifikasi', desc: 'Tim kami akan memvalidasi dokumen Anda.' },
-                                { step: '06', title: 'Proses Fisik', desc: 'Penyerahan fisik arsip ke kantor petugas.' },
+                                { step: '06', title: 'Penyerahan Arsip', desc: 'Penyerahan fisik arsip ke kantor petugas.' },
                                 { step: '07', title: 'Lacak Progres', desc: 'Pantau tahapan di menu tracking sistem.' },
                                 { step: '08', title: 'Penyelesaian', desc: 'Informasi selesai dan akses softfile hasil.' },
-                                { step: '09', title: 'Pengambilan', desc: 'Arsip fisik siap diambil kembali oleh pemohon.' },
+                                { step: '09', title: 'Pengambilan dan Penyerahan Kembali', desc: 'Arsip fisik siap diambil kembali oleh pemohon.' },
                             ].map((item, idx) => (
                                 <div key={idx} className="bg-white/5 border border-white/5 p-8 rounded-3xl space-y-4 hover:border-red-500/50 transition-colors">
                                     <div className="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-sm">

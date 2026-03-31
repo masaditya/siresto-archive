@@ -128,6 +128,7 @@ export default function RestorationIndex({ requests }: { requests: any[] }) {
                                             <div className="flex flex-col gap-1">
                                                 <span className="font-mono font-black text-blue-400 text-lg tracking-wider mb-1 uppercase">{req.resi_number}</span>
                                                 <span className="font-bold text-base text-white">{req.name}</span>
+                                                <span className="text-xs font-medium text-white/60">Pemohon: {req.person_name}</span>
                                                 <span className="text-[10px] font-bold text-white/30 tracking-widest uppercase">{req.whatsapp}</span>
                                             </div>
                                         </td>
@@ -260,7 +261,7 @@ export default function RestorationIndex({ requests }: { requests: any[] }) {
                                         onValueChange={(v) => {
                                             setData('stage', v);
                                             // Reset files if we change stage from 'Selesai' away
-                                            if (v !== 'Selesai & Serah Terima') {
+                                            if (v !== 'Selesai dan serah terima kembali arsip') {
                                                 setData(d => ({ ...d, result_file: null, ba_final_file: null }));
                                             }
                                         }}
@@ -269,19 +270,19 @@ export default function RestorationIndex({ requests }: { requests: any[] }) {
                                             <SelectValue placeholder="-- Pilih Tahapan --" />
                                         </SelectTrigger>
                                         <SelectContent className="rounded-xl bg-[#021a3a] border-white/10 text-white shadow-2xl p-2">
-                                            <SelectItem value="Verifikasi arsip fisik">1. Verifikasi arsip fisik</SelectItem>
-                                            <SelectItem value="Pengerjaan pemisahan">2. Pengerjaan pemisahan</SelectItem>
-                                            <SelectItem value="Perbaikan lembaran">3. Perbaikan lembaran</SelectItem>
-                                            <SelectItem value="Penyusunan dan perapihan">4. Penyusunan dan perapihan</SelectItem>
-                                            <SelectItem value="Duplikasi arsip">5. Duplikasi arsip</SelectItem>
-                                            <SelectItem value="Penjilidan arsip">6. Penjilidan arsip</SelectItem>
-                                            <SelectItem value="Alih Media">7. Alih Media</SelectItem>
-                                            <SelectItem value="Selesai & Serah Terima">8. Selesai & Serah Terima</SelectItem>
+                                            <SelectItem value="Verifikasi dan penyerahan arsip">2. Verifikasi dan penyerahan arsip</SelectItem>
+                                            <SelectItem value="Pemisahan lembar arsip">3. Pemisahan lembar arsip</SelectItem>
+                                            <SelectItem value="Perapian lembar arsip">4. Perapian lembar arsip</SelectItem>
+                                            <SelectItem value="Alih media">5. Alih media</SelectItem>
+                                            <SelectItem value="Penyatuan kembali arsip">6. Penyatuan kembali arsip</SelectItem>
+                                            <SelectItem value="Duplikasi">7. Duplikasi</SelectItem>
+                                            <SelectItem value="Penjilidan arsip">8. Penjilidan arsip</SelectItem>
+                                            <SelectItem value="Selesai dan serah terima kembali arsip">9. Selesai dan serah terima kembali arsip</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     {errors.stage && <p className="text-red-400 text-[10px] font-bold uppercase tracking-widest">{errors.stage}</p>}
                                 </div>
-                                {data.stage === 'Selesai & Serah Terima' && (
+                                {data.stage === 'Selesai dan serah terima kembali arsip' && (
                                     <div className="bg-green-500/5 border border-green-500/10 rounded-3xl p-8 space-y-8 animate-in zoom-in-95 duration-500">
                                         <div className="flex items-center gap-3">
                                             <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-[#021a3a]">

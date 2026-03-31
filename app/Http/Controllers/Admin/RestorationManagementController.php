@@ -53,7 +53,7 @@ class RestorationManagementController extends Controller
             // Update current stage and status of the main request
             $updateData = [
                 'current_stage' => $request->stage,
-                'status' => $request->stage == 'Selesai & Serah Terima' ? 'Selesai' : 'Dikerjakan',
+                'status' => $request->stage == 'Selesai dan serah terima kembali arsip' ? 'Selesai' : 'Dikerjakan',
             ];
 
             if ($request->hasFile('result_file')) {

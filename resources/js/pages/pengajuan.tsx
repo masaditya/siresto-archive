@@ -30,6 +30,7 @@ import PublicLayout from '@/layouts/public-layout';
     
         const submissionForm = useForm({
             name: '',
+            person_name: '',
             whatsapp: '',
             address: '',
             archive_type: '',
@@ -65,10 +66,10 @@ import PublicLayout from '@/layouts/public-layout';
                         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[40px] p-12 shadow-2xl">
                             <form onSubmit={handleSubmission} className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
                                 <div className="space-y-3">
-                                    <Label className="text-white/60 ml-1">Nama Lengkap / Instansi</Label>
+                                    <Label className="text-white/60 ml-1">Nama Instansi</Label>
                                     <div className="relative group">
                                         <div className="absolute left-5 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7"></path><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"></path></svg>
                                         </div>
                                         <Input 
                                             className="bg-white/5 border-white/10 h-16 pl-14 rounded-xl focus:bg-white/10 focus:border-white/20 transition-all placeholder:text-white/20" 
@@ -79,6 +80,23 @@ import PublicLayout from '@/layouts/public-layout';
                                         />
                                     </div>
                                     {submissionForm.errors.name && <p className="text-red-400 text-xs ml-1">{submissionForm.errors.name}</p>}
+                                </div>
+
+                                <div className="space-y-3">
+                                    <Label className="text-white/60 ml-1">Nama Pemohon (Orang)</Label>
+                                    <div className="relative group">
+                                        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                        </div>
+                                        <Input 
+                                            className="bg-white/5 border-white/10 h-16 pl-14 rounded-xl focus:bg-white/10 focus:border-white/20 transition-all placeholder:text-white/20" 
+                                            placeholder="Cth: Budi Santoso"
+                                            required
+                                            value={submissionForm.data.person_name}
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => submissionForm.setData('person_name', e.target.value)}
+                                        />
+                                    </div>
+                                    {submissionForm.errors.person_name && <p className="text-red-400 text-xs ml-1">{submissionForm.errors.person_name}</p>}
                                 </div>
 
                                 <div className="space-y-3">

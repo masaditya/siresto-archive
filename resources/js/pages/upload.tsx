@@ -11,7 +11,6 @@ export default function Upload() {
     const uploadForm = useForm({
         resi_number: '',
         permohonan: null as File | null,
-        berita_acara: null as File | null,
         foto_kondisi: [] as File[],
     });
 
@@ -114,22 +113,8 @@ export default function Upload() {
                                         {uploadForm.errors.permohonan && <p className="text-red-400 text-xs ml-1 font-medium">{uploadForm.errors.permohonan}</p>}
                                     </div>
 
-                                    <div className="space-y-3">
-                                        <Label className="text-white/60 ml-1">2. Berita Acara (PDF - Max 10MB)</Label>
-                                        <div className="relative group">
-                                            <Input 
-                                                type="file" 
-                                                accept=".pdf" 
-                                                className="bg-white/5 border-white/10 h-16 pl-4 pr-4 pt-4 rounded-xl focus:bg-white/10 transition-all cursor-pointer file:bg-white/10 file:text-white file:border-0 file:rounded-lg file:px-3 file:py-1 file:text-xs file:mr-4" 
-                                                required
-                                                onChange={e => uploadForm.setData('berita_acara', e.target.files ? e.target.files[0] : null)}
-                                            />
-                                        </div>
-                                        {uploadForm.errors.berita_acara && <p className="text-red-400 text-xs ml-1 font-medium">{uploadForm.errors.berita_acara}</p>}
-                                    </div>
-
                                     <div className="md:col-span-2 space-y-3">
-                                        <Label className="text-white/60 ml-1">3. Foto Kondisi Arsip / Barang (JPG/PNG - Max 10MB per file)</Label>
+                                        <Label className="text-white/60 ml-1">2. Foto Kondisi Arsip / Barang (JPG/PNG - Max 10MB per file)</Label>
                                         <div className="relative group">
                                             <Input 
                                                 type="file" 

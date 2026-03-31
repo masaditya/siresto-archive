@@ -16,6 +16,7 @@ class RestorationController extends Controller
             'stats' => [
                 'waiting' => RestorationRequest::where('status', 'Pending')->count(),
                 'in_progress' => RestorationRequest::where('status', 'Dikerjakan')->count(),
+                'completed' => RestorationRequest::where('status', 'Selesai')->count(),
                 'total' => RestorationRequest::count(),
             ]
         ]);
@@ -41,6 +42,7 @@ class RestorationController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'person_name' => 'required|string|max:255',
             'whatsapp' => 'required|string|max:20',
             'address' => 'required|string',
             'archive_type' => 'required|string',
@@ -55,11 +57,13 @@ class RestorationController extends Controller
             'resi_number' => $resi,
             'queue_number' => $queue,
             'name' => $request->name,
+            'person_name' => $request->person_name,
             'whatsapp' => $request->whatsapp,
             'address' => $request->address,
             'archive_type' => $request->archive_type,
             'estimated_sheets' => $request->estimated_sheets,
             'status' => 'Pending',
+            'current_stage' => 'Pengajuan dan upload dokumen',
             'user_id' => auth()->id(),
         ]);
 
@@ -75,9 +79,9 @@ class RestorationController extends Controller
     {
         $request->validate([
             'resi_number' => 'required|exists:restoration_requests,resi_number',
-            'permohonan' => 'required|file|mimes:pdf|max:10240',
-            'berita_acara' => 'required|file|mimes:pdf|max:10240',
-            'foto_kondisi' => 'required|array',
+            'permohonan' => 'nullable|file|mimes:pdf|max:10240',
+            'berita_acara' => 'nullable|file|mimes:pdf|max:10240',
+            'foto_kondisi' => 'nullable|array',
             'foto_kondisi.*' => 'required|image|mimes:jpeg,png,jpg|max:10240',
         ]);
 
@@ -87,39 +91,45 @@ class RestorationController extends Controller
         $resiPrefix = $request->resi_number . '_';
         
         // Store files with unique names including resi
-        $path1 = $request->file('permohonan')->storeAs(
-            'documents', 
-            $resiPrefix . 'permohonan_' . time() . '.' . $request->file('permohonan')->getClientOriginalExtension(), 
-            'public'
-        );
-        RestorationDocument::create([
-            'restoration_request_id' => $restoration->id,
-            'document_type' => 'Surat Permohonan',
-            'file_path' => $path1,
-        ]);
-
-        $path2 = $request->file('berita_acara')->storeAs(
-            'documents', 
-            $resiPrefix . 'berita_acara_' . time() . '.' . $request->file('berita_acara')->getClientOriginalExtension(), 
-            'public'
-        );
-        RestorationDocument::create([
-            'restoration_request_id' => $restoration->id,
-            'document_type' => 'Berita Acara',
-            'file_path' => $path2,
-        ]);
-
-        foreach ($request->file('foto_kondisi') as $index => $file) {
-            $path = $file->storeAs(
-                'documents', 
-                $resiPrefix . 'foto_' . $index . '_' . time() . '.' . $file->getClientOriginalExtension(), 
+        if ($request->hasFile('permohonan')) {
+            $path1 = $request->file('permohonan')->storeAs(
+                'documents',
+                $resiPrefix . 'permohonan_' . time() . '.' . $request->file('permohonan')->getClientOriginalExtension(),
                 'public'
             );
             RestorationDocument::create([
                 'restoration_request_id' => $restoration->id,
-                'document_type' => 'Foto Kondisi',
-                'file_path' => $path,
+                'document_type' => 'Surat Permohonan',
+                'file_path' => $path1,
             ]);
+        }
+
+        if ($request->hasFile('berita_acara')) {
+            $path2 = $request->file('berita_acara')->storeAs(
+                'documents',
+                $resiPrefix . 'berita_acara_' . time() . '.' . $request->file('berita_acara')->getClientOriginalExtension(),
+                'public'
+            );
+            RestorationDocument::create([
+                'restoration_request_id' => $restoration->id,
+                'document_type' => 'Berita Acara',
+                'file_path' => $path2,
+            ]);
+        }
+
+        if ($request->hasFile('foto_kondisi')) {
+            foreach ($request->file('foto_kondisi') as $index => $file) {
+                $path = $file->storeAs(
+                    'documents',
+                    $resiPrefix . 'foto_' . $index . '_' . time() . '.' . $file->getClientOriginalExtension(),
+                    'public'
+                );
+                RestorationDocument::create([
+                    'restoration_request_id' => $restoration->id,
+                    'document_type' => 'Foto Kondisi',
+                    'file_path' => $path,
+                ]);
+            }
         }
 
 
