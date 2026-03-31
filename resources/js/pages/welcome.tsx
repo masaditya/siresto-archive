@@ -13,7 +13,7 @@ import { FAQCard } from '@/components/restoration/faq-card';
 export default function Welcome({ stats }: { stats: any }) {
     return (
         <PublicLayout>
-            <Head title="Si-Resto - Sistem Informasi Restorasi Arsip" />
+            <Head title="Si-Resto - Sistem Informasi Restorasi Online" />
 
             <div className="flex flex-col gap-24 py-12">
                 {/* HERO SECTION */}
@@ -24,10 +24,10 @@ export default function Welcome({ stats }: { stats: any }) {
                             <p className="text-lg font-medium text-white/80">Sistem Informasi Perpustakaan & Kearsipan</p>
                         </div>
                         <h1 className="text-6xl lg:text-8xl font-black leading-tight text-white tracking-tighter">
-                            Restorasi <span className="text-red-500">Arsip</span>
+                            Restorasi <span className="text-red-500">Online</span>
                         </h1>
                         <p className="text-lg text-white/50 max-w-md leading-relaxed">
-                            Layanan restorasi profesional untuk menjaga arsip bernilai sejarah, hukum, dan ilmu pengetahuan tetap abadi.
+                            Layanan restorasi online profesional untuk menjaga arsip bernilai sejarah, hukum, dan ilmu pengetahuan tetap abadi.
                         </p>
                         <Button
                             asChild
@@ -98,14 +98,14 @@ export default function Welcome({ stats }: { stats: any }) {
                     <div className="text-center space-y-4">
                         <h2 className="text-4xl lg:text-5xl font-black tracking-tight text-white">Tanya Jawab <span className="text-red-500 italic">Si-Resto</span></h2>
                         <p className="text-white/40 max-w-xl mx-auto">
-                            Informasi lengkap mengenai layanan restorasi arsip di Bojonegoro.
+                            Informasi lengkap mengenai layanan restorasi online arsip di Bojonegoro.
                         </p>
                     </div>
 
                     <div className="max-w-4xl mx-auto space-y-6">
-                        <FAQCard title="1. Apa itu Restorasi Arsip?" highlight className="rounded-3xl! border-none">
+                        <FAQCard title="1. Apa itu Restorasi Online?" highlight className="rounded-3xl! border-none">
                             <p className="text-lg text-[#032553]/80 mb-4">
-                                Restorasi arsip adalah proses perbaikan dan pemulihan arsip yang mengalami kerusakan fisik maupun kimia, agar informasi di dalamnya tetap terjaga dan dapat dimanfaatkan kembali.
+                                Restorasi online arsip adalah proses perbaikan dan pemulihan arsip yang mengalami kerusakan fisik maupun kimia, agar informasi di dalamnya tetap terjaga dan dapat dimanfaatkan kembali.
                             </p>
                             <p className="font-bold text-[#032553] border-t border-[#032553]/10 pt-4">
                                 "Arsip bukan sekadar kertas biasa — di dalamnya ada nilai sejarah, bukti hukum, dan data penting."
@@ -140,7 +140,7 @@ export default function Welcome({ stats }: { stats: any }) {
                 <section className="container mx-auto px-4 py-24" id="alur">
                     <div className="max-w-5xl mx-auto space-y-16">
                         <div className="text-center space-y-4">
-                            <h2 className="text-4xl lg:text-5xl font-black text-white tracking-tight italic">6. Alur Layanan <span className="not-italic text-red-500">Restorasi</span></h2>
+                            <h2 className="text-4xl lg:text-5xl font-black text-white tracking-tight italic">6. Alur Layanan <span className="not-italic text-red-500">Restorasi Online</span></h2>
                             <p className="text-white/40 italic">"Langkah mudah proses restorasi arsip di SIRESTO"</p>
                         </div>
 

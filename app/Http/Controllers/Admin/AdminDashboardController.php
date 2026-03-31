@@ -21,7 +21,7 @@ class AdminDashboardController extends Controller
         $recentRequests = RestorationRequest::latest()->take(5)->get();
 
         // Chart data (mocking for now, adjust with real logic if needed)
-        $chartData = RestorationRequest::select(DB::raw('COUNT(*) as count'), DB::raw("strftime('%m', created_at) as month"))
+        $chartData = RestorationRequest::select(DB::raw('COUNT(*) as count'), DB::raw("DATE_FORMAT(created_at, '%m') as month"))
             ->groupBy('month')
             ->get();
 
