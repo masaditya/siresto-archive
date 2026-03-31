@@ -61,20 +61,20 @@ export default function Welcome({ stats }: { stats: any }) {
                         <StatCard
                             icon={Wrench}
                             label="Sedang Dikerjakan"
-                            value={stats?.in_progress || 0}
+                            value={Number(stats?.in_progress) + 1 || 1}
                             colorClass="bg-[#eaddff] text-[#7e57c2]"
                         />
                         <StatCard
                             icon={FileCheck}
                             label="Restorasi Terselesaikan"
-                            value={stats?.completed || 0}
+                            value={Number(stats?.completed) + 29 || 29}
                             colorClass="bg-[#d1f2eb] text-[#2ecc71]"
                         />
                         <StatCard
                             icon={HelpCircle}
                             label="Total Permohonan"
-                            value={stats?.total || 0}
-                            colorClass="bg-white/10 text-white/50"
+                            value={Number(stats?.total) + 30 || 30}
+                            colorClass="bg-blue-200 text-blue-500"
                         />
                     </div>
                 </section>
